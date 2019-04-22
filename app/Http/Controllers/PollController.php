@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Poll;
+use App\Http\Resources\Poll as PollResource;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -19,8 +20,10 @@ class PollController extends Controller
         if(is_null($poll)){
             return response()->json(null,404);
         }
-        return response()->json(Poll::findorFail($id), 200);
+         $response = new PollResource(Poll::findorFail($id), 200);
+         return response()->json($response,200);
     }
+
     public function store(Request $request)
     {
         $rules =[
@@ -49,5 +52,11 @@ class PollController extends Controller
     public function errors()
     {
         return response()->json(['msg'=> 'Payment is Required'], 501);
+    }
+
+    public function questions(Request $request, Poll $poll){
+$questions =$poll->questions;
+return response()->json($questions,200);
+
     }
 }
