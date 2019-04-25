@@ -10,17 +10,21 @@ class PollController extends Controller
 {
     public function index()
     {
-          return response()->json(Poll::get(), 200);
+          return response()->json(Poll::paginate(1), 200);
     }
 
 
     public function show($id)
     {
-        $poll = Poll::find($id);
-        if(is_null($poll)){
-            return response()->json(null,404);
-        }
-         $response = new PollResource(Poll::findorFail($id), 200);
+        $poll = Poll::with('questions')->findorFail($id);
+        $response['poll'] = $poll;
+        $response['questions'] = $poll->questions;
+
+        // if(is_null($poll)){
+        //     return response()->json(null,404);
+        // }
+        // $poll = Poll::with('questions')->findorFail($id);
+        //  $response = new PollResource($response, 200);
          return response()->json($response,200);
     }
 

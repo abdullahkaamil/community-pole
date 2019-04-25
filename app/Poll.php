@@ -8,6 +8,11 @@ class Poll extends Model
 {
     //
         protected $fillable = ['title'];
+
+        protected $hidden = [
+            'questions'
+        ];
+
         public function questions(){
             return $this->hasMany('App\Question');
         }
